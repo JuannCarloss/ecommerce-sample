@@ -10,7 +10,6 @@ import java.util.List;
 @Entity(name = "orders")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class Order extends EntityID{
@@ -27,4 +26,11 @@ public class Order extends EntityID{
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItem;
+
+    public Order(Customer customer, LocalDateTime orderDate, OrderStatus status, List<OrderItem> orderItem) {
+        this.customer = customer;
+        this.orderDate = LocalDateTime.now();
+        this.status = status;
+        this.orderItem = orderItem;
+    }
 }
