@@ -20,16 +20,15 @@ public class OrderItemService {
     private ProductRepository productRepository;
 
     public void saveAll(List<OrderItem> list){
-        for (int i = 0; i < list.size(); i++){
-            if(productQuantityValidator(productRepository.findById(list.get(i).getProduct().getId())))
+        for (OrderItem orderItem : list) {
+            if (productQuantityValidator(productRepository.findById(orderItem.getProduct().getId()), orderItem)){
+                throw new RuntimeException("We don't have this product in stock at the moment :(");
+            }
         }
         orderItemRepository.saveAll(list);
     }
 
     public boolean productQuantityValidator(Optional<Product> productInStock, OrderItem order){
-        if (productInStock.get().getStock() < order.getProduct().getStock()){
-            throw new RuntimeException("Produto indisponível em estoque");
-        }
-        return true;
+        return productInStock.filter(product -> product.getStock() < order.getProduct().getStock()).isPresent();
     }
 }
