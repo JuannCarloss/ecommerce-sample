@@ -22,6 +22,7 @@ public class Order extends EntityID{
     private LocalDateTime orderDate;
 
     @Column(name = "order_status")
+    @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
