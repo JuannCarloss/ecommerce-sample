@@ -21,11 +21,12 @@ public class OrderService {
     public Order post(Order entity){
 
         if (entity.getOrderItem().isEmpty()){
-            throw new RuntimeException("Ei! Preencha seu carrinho para efetuar uma compra");
+            throw new RuntimeException("Hey! you need to have at least one product in your shopping cart to make a purchase");
         }
 
         orderItemService.saveAll(entity.getOrderItem());
 
         return orderRepository.save(entity);
     }
+
 }
