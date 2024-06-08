@@ -1,5 +1,6 @@
 package com.shop.ecommerce.services;
 
+import com.shop.ecommerce.enterprise.ValidationException;
 import com.shop.ecommerce.models.Order;
 import com.shop.ecommerce.models.OrderItem;
 import com.shop.ecommerce.models.Product;
@@ -23,7 +24,6 @@ public class OrderItemService {
     public void saveAll(List<OrderItem> list, Order order){
 
         list.forEach(this::validateStock);
-
         list.forEach(orderItem -> orderItem.setOrder(order));
         orderItemRepository.saveAll(list);
     }
@@ -31,7 +31,7 @@ public class OrderItemService {
     public boolean validateStock(OrderItem orderItem){
         Optional<Product> byId = productRepository.findById(orderItem.getProduct().getId());
         if (orderItem.getProductQuantity() > byId.get().getStock()){
-            throw new RuntimeException("We do not have stock of this product at the moment :(");
+            throw new ValidationException("We do not have stock of this product at the moment :(");
         }
         byId.get().setStock(byId.get().getStock() - orderItem.getProductQuantity());
         return true;

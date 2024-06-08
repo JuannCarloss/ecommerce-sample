@@ -1,5 +1,6 @@
 package com.shop.ecommerce.services;
 
+import com.shop.ecommerce.enterprise.ValidationException;
 import com.shop.ecommerce.models.Customer;
 import com.shop.ecommerce.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ public class CustomerService {
 
     public Customer post(Customer entity){
         if (customerRepository.findByEmail(entity.getEmail()) != null){
-            throw new RuntimeException("email ja cadastrado");
+            throw new ValidationException("email already registered");
         }
         return customerRepository.save(entity);
     }

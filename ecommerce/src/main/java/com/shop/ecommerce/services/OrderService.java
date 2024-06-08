@@ -1,5 +1,6 @@
 package com.shop.ecommerce.services;
 
+import com.shop.ecommerce.enterprise.ValidationException;
 import com.shop.ecommerce.models.Order;
 import com.shop.ecommerce.models.OrderItem;
 import com.shop.ecommerce.repositories.OrderRepository;
@@ -21,7 +22,7 @@ public class OrderService {
     public Order post(Order entity){
 
         if (entity.getOrderItem().isEmpty()){
-            throw new RuntimeException("Hey! you need to have at least one product in your shopping cart to make a purchase");
+            throw new ValidationException("Hey! you need to have at least one product in your shopping cart to make a purchase");
         }
 
         var save = orderRepository.save(entity);
