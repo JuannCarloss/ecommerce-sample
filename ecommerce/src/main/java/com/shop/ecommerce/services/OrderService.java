@@ -24,9 +24,10 @@ public class OrderService {
             throw new RuntimeException("Hey! you need to have at least one product in your shopping cart to make a purchase");
         }
 
-        orderItemService.saveAll(entity.getOrderItem());
+        var save = orderRepository.save(entity);
+        orderItemService.saveAll(entity.getOrderItem(), entity);
 
-        return orderRepository.save(entity);
+        return save;
     }
 
 }
