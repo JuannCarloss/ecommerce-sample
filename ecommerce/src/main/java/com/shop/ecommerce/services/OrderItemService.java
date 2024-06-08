@@ -1,5 +1,6 @@
 package com.shop.ecommerce.services;
 
+import com.shop.ecommerce.models.Order;
 import com.shop.ecommerce.models.OrderItem;
 import com.shop.ecommerce.models.Product;
 import com.shop.ecommerce.repositories.OrderItemRepository;
@@ -19,16 +20,21 @@ public class OrderItemService {
     @Autowired
     private ProductRepository productRepository;
 
-    public void saveAll(List<OrderItem> list){
-        for (OrderItem orderItem : list) {
-            if (productQuantityValidator(productRepository.findById(orderItem.getProduct().getId()), orderItem)){
-                throw new RuntimeException("We don't have this product in stock at the moment :(");
-            }
-        }
+    public void saveAll(List<OrderItem> list, Order order){
+
+        list.forEach(this::validateStock);
+
+        list.forEach(orderItem -> orderItem.setOrder(order));
         orderItemRepository.saveAll(list);
     }
 
-    public boolean productQuantityValidator(Optional<Product> productInStock, OrderItem order){
-        return productInStock.filter(product -> product.getStock() < order.getProduct().getStock()).isPresent();
+    public boolean validateStock(OrderItem orderItem){
+        Optional<Product> byId = productRepository.findById(orderItem.getProduct().getId());
+        if (orderItem.getProductQuantity() > byId.get().getStock()){
+            throw new RuntimeException("We do not have stock of this product at the moment :(");
+        }
+        byId.get().setStock(byId.get().getStock() - orderItem.getProductQuantity());
+        return true;
     }
+
 }
