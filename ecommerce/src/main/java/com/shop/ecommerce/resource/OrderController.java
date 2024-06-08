@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/order")
-public class OrderController {
+public class OrderController extends AbstractController{
 
     @Autowired
     private OrderService service;

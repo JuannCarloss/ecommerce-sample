@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/product")
-public class ProductController {
+public class ProductController extends AbstractController{
 
     @Autowired
     private ProductService service;
