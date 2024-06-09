@@ -1,5 +1,6 @@
 package com.shop.ecommerce.resource;
 
+import com.shop.ecommerce.enterprise.NotFoundException;
 import com.shop.ecommerce.enterprise.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -33,6 +34,14 @@ public abstract class AbstractController {
     @ExceptionHandler(ValidationException.class)
     public Map<String, String> handleValidationExceptions422(
             ValidationException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("erro", ex.getMessage());
+        return errors;
+    }
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NotFoundException.class)
+    public Map<String, String> handleValidationExceptions422(
+            NotFoundException ex) {
         Map<String, String> errors = new HashMap<>();
         errors.put("erro", ex.getMessage());
         return errors;
