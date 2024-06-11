@@ -10,8 +10,7 @@ import java.util.List;
 @Entity(name = "orders")
 @Getter
 @Setter
-@NoArgsConstructor
-@Builder
+@AllArgsConstructor
 public class Order extends EntityID{
 
     @ManyToOne
@@ -28,10 +27,10 @@ public class Order extends EntityID{
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItem;
 
-    public Order(Customer customer, LocalDateTime orderDate, OrderStatus status, List<OrderItem> orderItem) {
-        this.customer = customer;
+    @Column(name = "total_price")
+    private Double totalPrice;
+
+    public Order(){
         this.orderDate = LocalDateTime.now();
-        this.status = status;
-        this.orderItem = orderItem;
     }
 }
