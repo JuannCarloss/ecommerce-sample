@@ -1,13 +1,14 @@
 package com.shop.ecommerce.services;
 
+import com.shop.ecommerce.enterprise.NotFoundException;
 import com.shop.ecommerce.enterprise.ValidationException;
 import com.shop.ecommerce.models.Order;
-import com.shop.ecommerce.models.OrderItem;
 import com.shop.ecommerce.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+
 
 
 @Service
@@ -19,6 +20,7 @@ public class OrderService {
     @Autowired
     private OrderItemService orderItemService;
 
+    @Transactional
     public Order post(Order entity){
 
         if (entity.getOrderItem().isEmpty()){
@@ -30,5 +32,4 @@ public class OrderService {
 
         return save;
     }
-
 }
