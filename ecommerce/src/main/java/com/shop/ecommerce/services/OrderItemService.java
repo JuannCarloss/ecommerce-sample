@@ -23,20 +23,25 @@ public class OrderItemService {
     @Autowired
     private ProductRepository productRepository;
 
-    public void saveAll(List<OrderItem> list, Order order){
+    public void saveAll(List<OrderItem> orderItemList, Order order) {
 
-        list.forEach(this::validateStock);
-        list.forEach(orderItem -> orderItem.setOrder(order));
-        orderItemRepository.saveAll(list);
+        orderItemList.forEach(this::validateStock);
+        orderItemList.forEach(orderItem -> orderItem.setOrder(order));
+        orderItemList.forEach(list -> { totalValue(list, order);});
+        orderItemRepository.saveAll(orderItemList);
     }
 
-    public boolean validateStock(OrderItem orderItem){
+    public boolean validateStock(OrderItem orderItem) {
         Optional<Product> byId = productRepository.findById(orderItem.getProduct().getId());
-        if (orderItem.getProductQuantity() > byId.get().getStock()){
+        if (orderItem.getProductQuantity() > byId.get().getStock()) {
             throw new ValidationException("We do not have stock for " + byId.get().getName() + " at the moment :(");
         }
         byId.get().setStock(byId.get().getStock() - orderItem.getProductQuantity());
         return true;
     }
 
+    public void totalValue(OrderItem orderItems, Order order) {
+            Optional<Product> byId = productRepository.findById(orderItems.getProduct().getId());
+            byId.ifPresent(product -> order.setTotalPrice(order.getTotalPrice() + (product.getPrice() * orderItems.getProductQuantity())));
+    }
 }
