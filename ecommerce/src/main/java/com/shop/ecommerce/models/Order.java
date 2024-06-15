@@ -32,5 +32,7 @@ public class Order extends EntityID{
 
     public Order(){
         this.orderDate = LocalDateTime.now();
+        this.status = OrderStatus.AWAITING_PAYMENT;
+        this.totalPrice = 0.0;
     }
 }
