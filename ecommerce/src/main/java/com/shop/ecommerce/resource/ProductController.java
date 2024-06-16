@@ -1,5 +1,6 @@
 package com.shop.ecommerce.resource;
 
+import com.shop.ecommerce.dtos.ProductRequestDTO;
 import com.shop.ecommerce.models.Product;
 import com.shop.ecommerce.services.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -33,9 +35,14 @@ public class ProductController extends AbstractController{
             @ApiResponse(responseCode = "422", description = "the body that you sent is not valid",
                     content = @Content) })
 
-    @PostMapping
-    public ResponseEntity save(@RequestBody Product entity){
-        var save = service.post(entity);
+    @PostMapping(consumes = "multipart/form-data")
+    public ResponseEntity save(@RequestParam("name")String name,
+                               @RequestParam("url") MultipartFile url,
+                               @RequestParam("description")String description,
+                               @RequestParam("price")Double price,
+                               @RequestParam("stock")Integer stock){
+        ProductRequestDTO product = new ProductRequestDTO(name, url, description, price, stock);
+        var save = service.post(product);
         return ResponseEntity.status(HttpStatus.CREATED).body(save);
     }
 
