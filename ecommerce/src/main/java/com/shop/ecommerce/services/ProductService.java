@@ -7,6 +7,7 @@ import com.shop.ecommerce.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -38,5 +39,13 @@ public class ProductService {
         }
 
         throw new NotFoundException("Product not found");
+    }
+
+    public List<Product> findAllProductsByHighestPrice(){
+        return repository.findProductsWithHighestPrice();
+    }
+
+    public List<Product> findAllProductsByLowestPrice(){
+        return repository.findProductsWithLowestPrice();
     }
 }

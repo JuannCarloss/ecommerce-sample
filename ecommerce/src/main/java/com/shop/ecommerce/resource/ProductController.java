@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/product")
 public class ProductController extends AbstractController{
@@ -32,7 +34,7 @@ public class ProductController extends AbstractController{
                     content = @Content) })
 
     @PostMapping
-    private ResponseEntity save(@RequestBody Product entity){
+    public ResponseEntity save(@RequestBody Product entity){
         var save = service.post(entity);
         return ResponseEntity.status(HttpStatus.CREATED).body(save);
     }
@@ -48,9 +50,37 @@ public class ProductController extends AbstractController{
             @ApiResponse(responseCode = "422", description = "the body that you sent is not valid",
                     content = @Content) })
     @PutMapping("{id}")
-    private ResponseEntity update(@PathVariable("id") Long id, @RequestBody Product entity){
+    public ResponseEntity update(@PathVariable("id") Long id, @RequestBody Product entity){
         var save = service.updateProduct(id, entity);
 
         return ResponseEntity.ok(save);
     }
+
+    @Tag(name = "PRODUCT")
+    @Operation(summary = "List all products with highest prices")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "products with highest price",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Product.class)) })})
+    @GetMapping("highest")
+    public ResponseEntity highestPrices(){
+        List<Product> list = service.findAllProductsByHighestPrice();
+
+        return ResponseEntity.ok(list);
+    }
+
+
+    @Tag(name = "PRODUCT")
+    @Operation(summary = "List all products with lowest prices")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "products with lowest price",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Product.class)) })})
+    @GetMapping("lowest")
+    public ResponseEntity lowestPrices(){
+        List<Product> list = service.findAllProductsByLowestPrice();
+
+        return ResponseEntity.ok(list);
+    }
+
 }
