@@ -1,8 +1,8 @@
 package com.shop.ecommerce.services;
 
+import com.shop.ecommerce.dtos.ProductRequestDTO;
 import com.shop.ecommerce.models.Product;
 import com.shop.ecommerce.repositories.ProductRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,8 +28,8 @@ class ProductServiceTest {
        productService.post(newProduct());
     }
 
-    public Product newProduct(){
-        return new Product("produto", "descricao", 100.0, 4);
+    public ProductRequestDTO newProduct(){
+        return new ProductRequestDTO("produto", null, "descricao", 100.0, 4);
     }
 
 }
