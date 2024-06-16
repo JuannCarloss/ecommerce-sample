@@ -16,6 +16,9 @@ public class Product extends EntityID {
     @Column(name = "product_name")
     private String name;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @Column(name = "description")
     private String description;
 
