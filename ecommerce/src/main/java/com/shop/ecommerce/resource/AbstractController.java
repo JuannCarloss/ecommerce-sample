@@ -1,5 +1,6 @@
 package com.shop.ecommerce.resource;
 
+import com.shop.ecommerce.enterprise.NoContentException;
 import com.shop.ecommerce.enterprise.NotFoundException;
 import com.shop.ecommerce.enterprise.ValidationException;
 import org.springframework.http.HttpStatus;
@@ -40,10 +41,19 @@ public abstract class AbstractController {
     }
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFoundException.class)
-    public Map<String, String> handleValidationExceptions422(
+    public Map<String, String> handleValidationExceptions404(
             NotFoundException ex) {
         Map<String, String> errors = new HashMap<>();
         errors.put("erro", ex.getMessage());
         return errors;
     }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ExceptionHandler(NoContentException.class)
+    public Map<String, String> handleValidationExceptions204(
+            NoContentException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("erro", ex.getMessage());
+        return errors;
+    }
+
 }
