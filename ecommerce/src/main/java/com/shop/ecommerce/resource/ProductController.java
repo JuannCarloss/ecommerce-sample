@@ -90,4 +90,11 @@ public class ProductController extends AbstractController{
         return ResponseEntity.ok(list);
     }
 
+    @DeleteMapping("{id}")
+    public ResponseEntity delete(@RequestParam("id")Long id){
+        service.delete(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
 }

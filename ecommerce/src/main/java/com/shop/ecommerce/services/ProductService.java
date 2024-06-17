@@ -68,11 +68,27 @@ public class ProductService {
     }
 
     public List<Product> findAllProductsByHighestPrice(){
-        return repository.findProductsWithHighestPrice();
+        try {
+            return repository.findProductsWithHighestPrice();
+        }catch(Exception e){
+            throw new NotFoundException("We couldn't find any products");
+        }
     }
 
     public List<Product> findAllProductsByLowestPrice(){
-        return repository.findProductsWithLowestPrice();
+        try {
+            return repository.findProductsWithLowestPrice();
+        }catch(Exception e){
+            throw new NotFoundException("We couldn't find any products");
+        }
+    }
+
+    public void delete(Long id){
+        try {
+            repository.deleteById(id);
+        }catch(Exception e){
+            throw new NotFoundException("Product not found");
+        }
     }
 
     private String uploadImg(MultipartFile multipartFile){
@@ -85,10 +101,8 @@ public class ProductService {
             file.delete();
             return s3Client.getUrl(bucket, filename).toString();
         } catch (Exception e){
-            System.out.println("erro ao subir imagem");
             System.out.println(e.getMessage());
-            return "";
-            //throw new ValidationException("Error while uploading image");
+            throw new ValidationException("Error while uploading image");
         }
     }
 
