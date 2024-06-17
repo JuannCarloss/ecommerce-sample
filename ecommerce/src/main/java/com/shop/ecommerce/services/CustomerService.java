@@ -1,6 +1,5 @@
 package com.shop.ecommerce.services;
 
-import com.shop.ecommerce.enterprise.NoContentException;
 import com.shop.ecommerce.enterprise.NotFoundException;
 import com.shop.ecommerce.enterprise.ValidationException;
 import com.shop.ecommerce.models.Customer;
@@ -39,14 +38,19 @@ public class CustomerService {
     }
 
     public List<Customer> findAll(){
-        if (customerRepository.findAll().isEmpty()){
-            throw new NoContentException("not found any customer in database");
+        try {
+            return customerRepository.findAll();
+        }catch (Exception e){
+            throw new NotFoundException("Customer not found");
         }
-        return customerRepository.findAll();
     }
 
-    public Customer findById(Long id){
-        return customerRepository.findById(id).orElse(null);
+    public Optional<Customer> findById(Long id){
+        try {
+            return customerRepository.findById(id);
+        }catch(Exception e){
+            throw new NotFoundException("Customer not found");
+        }
     }
 
     public void delete(Long id){
