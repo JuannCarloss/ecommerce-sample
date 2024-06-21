@@ -38,19 +38,23 @@ public class CustomerService {
     }
 
     public List<Customer> findAll(){
-        try {
-            return customerRepository.findAll();
-        }catch (Exception e){
-            throw new NotFoundException("Customer not found");
+        var list = customerRepository.findAll();
+
+        if (list.isEmpty()){
+            throw new NotFoundException("We couldn't found any customer");
         }
+
+        return list;
     }
 
     public Optional<Customer> findById(Long id){
-        try {
-            return customerRepository.findById(id);
-        }catch(Exception e){
+        var byid = customerRepository.findById(id);
+
+        if (byid.isEmpty()){
             throw new NotFoundException("Customer not found");
         }
+
+        return byid;
     }
 
     public void delete(Long id){

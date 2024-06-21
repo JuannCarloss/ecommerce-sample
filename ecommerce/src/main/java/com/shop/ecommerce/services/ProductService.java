@@ -35,7 +35,7 @@ public class ProductService {
         }
 
         if (entity.stock() <= 0 ){
-            throw new ValidationException("Products with quantity less than one cannot be registered");
+            throw new ValidationException("Products quantity must be greater than zero");
         }
 
         var product = Product.builder()
@@ -68,27 +68,27 @@ public class ProductService {
     }
 
     public List<Product> findAllProductsByHighestPrice(){
-        try {
-            return repository.findProductsWithHighestPrice();
-        }catch(Exception e){
+        var list =repository.findProductsWithHighestPrice();
+
+        if (list.isEmpty()){
             throw new NotFoundException("We couldn't find any products");
         }
+
+        return list;
     }
 
     public List<Product> findAllProductsByLowestPrice(){
-        try {
-            return repository.findProductsWithLowestPrice();
-        }catch(Exception e){
+        var list = repository.findProductsWithLowestPrice();
+
+        if (list.isEmpty()){
             throw new NotFoundException("We couldn't find any products");
         }
+
+        return list;
     }
 
     public void delete(Long id){
-        try {
-            repository.deleteById(id);
-        }catch(Exception e){
-            throw new NotFoundException("Product not found");
-        }
+        repository.deleteById(id);
     }
 
     private String uploadImg(MultipartFile multipartFile){
