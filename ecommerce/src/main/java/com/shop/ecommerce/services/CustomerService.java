@@ -4,6 +4,7 @@ import com.shop.ecommerce.enterprise.NotFoundException;
 import com.shop.ecommerce.enterprise.ValidationException;
 import com.shop.ecommerce.models.Customer;
 import com.shop.ecommerce.repositories.CustomerRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,8 @@ import java.util.Optional;
 @Service
 public class CustomerService {
 
+    @Autowired
+    private ModelMapper modelMapper;
     @Autowired
     private CustomerRepository customerRepository;
 
@@ -28,10 +31,7 @@ public class CustomerService {
 
         if (byId.isPresent()){
             var updatedCustomer = byId.get();
-            updatedCustomer.setFirstName(entity.getFirstName());
-            updatedCustomer.setLastName(entity.getLastName());
-            updatedCustomer.setEmail(entity.getEmail());
-            updatedCustomer.setAddress(entity.getAddress());
+            modelMapper.map(entity, updatedCustomer);
             return customerRepository.save(updatedCustomer);
         }
         throw new NotFoundException("Customer not found");

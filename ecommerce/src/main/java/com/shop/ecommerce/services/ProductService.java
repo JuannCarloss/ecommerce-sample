@@ -6,6 +6,7 @@ import com.shop.ecommerce.enterprise.NotFoundException;
 import com.shop.ecommerce.enterprise.ValidationException;
 import com.shop.ecommerce.models.Product;
 import com.shop.ecommerce.repositories.ProductRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +22,8 @@ import java.util.UUID;
 @Service
 public class ProductService {
 
+    @Autowired
+    private ModelMapper modelMapper;
     @Autowired
     private AmazonS3 s3Client;
 
@@ -53,14 +56,8 @@ public class ProductService {
         Optional<Product> byId = repository.findById(id);
 
         if (byId.isPresent()){
-
-            var product = Product.builder()
-                    .name(updatedProduct.getName())
-                    .price(updatedProduct.getPrice())
-                    .description(updatedProduct.getDescription())
-                    .stock(updatedProduct.getStock())
-                    .build();
-            product.setId(byId.get().getId());
+            var product = byId.get();
+            modelMapper.map(updatedProduct, product);
             return repository.save(product);
         }
 
