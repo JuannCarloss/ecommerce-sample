@@ -1,6 +1,7 @@
 package com.shop.ecommerce.resource;
 
 import com.shop.ecommerce.enterprise.NotFoundException;
+import com.shop.ecommerce.enterprise.TooManyRequestException;
 import com.shop.ecommerce.enterprise.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -46,5 +47,14 @@ public abstract class AbstractController {
         errors.put("erro", ex.getMessage());
         return errors;
     }
+    @ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
+    @ExceptionHandler(TooManyRequestException.class)
+    public Map<String, String> handleValidationExceptions429(
+            TooManyRequestException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("erro", ex.getMessage());
+        return errors;
+    }
+
 
 }
