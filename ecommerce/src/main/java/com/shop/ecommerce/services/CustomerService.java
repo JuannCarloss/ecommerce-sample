@@ -4,6 +4,7 @@ import com.shop.ecommerce.enterprise.NotFoundException;
 import com.shop.ecommerce.enterprise.ValidationException;
 import com.shop.ecommerce.models.Customer;
 import com.shop.ecommerce.repositories.CustomerRepository;
+import com.shop.ecommerce.strategy.NewCustomerValidationStrategy;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,10 +20,11 @@ public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
 
+    @Autowired
+    private NewCustomerValidationStrategy customerValidationStrategy;
+
     public Customer post(Customer entity){
-        if (customerRepository.findByEmail(entity.getEmail()) != null){
-            throw new ValidationException("email already registered");
-        }
+        customerValidationStrategy.validate(entity);
         return customerRepository.save(entity);
     }
 
