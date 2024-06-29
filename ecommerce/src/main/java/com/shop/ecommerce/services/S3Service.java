@@ -2,7 +2,7 @@ package com.shop.ecommerce.services;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.shop.ecommerce.enterprise.ValidationException;
-import com.shop.ecommerce.utils.MultiparfileConverter;
+import com.shop.ecommerce.utils.MultipartfileConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,7 +21,7 @@ public class S3Service {
         String filename = UUID.randomUUID() + "-" + multipartFile.getOriginalFilename();
 
         try{
-            File file = MultiparfileConverter.convertToFile(multipartFile);
+            File file = MultipartfileConverter.convertToFile(multipartFile);
             s3Client.putObject(BUCKET_NAME, filename, file);
             file.delete();
             return s3Client.getUrl(BUCKET_NAME, filename).toString();
