@@ -26,7 +26,7 @@ public class ProductService {
     @Autowired
     private ModelMapper modelMapper;
     @Autowired
-    private AmazonS3 s3Client;
+    private S3Service s3Service;
 
     @Autowired
     private ProductRepository repository;
@@ -37,7 +37,7 @@ public class ProductService {
     public Product post(ProductRequestDTO entity){
 
         productValidationStrategies.forEach(validations -> validations.validate(entity));
-        String url = uploadImg(entity.img());
+        String url = s3Service.uploadImg(entity.img());
 
         var product = Product.builder()
                 .name(entity.name())
@@ -63,7 +63,7 @@ public class ProductService {
     }
 
     public List<Product> findAllProductsByHighestPrice(){
-        var list =repository.findProductsWithHighestPrice();
+        var list = repository.findProductsWithHighestPrice();
 
         if (list.isEmpty()){
             throw new NotFoundException("We couldn't find any products");
@@ -84,28 +84,5 @@ public class ProductService {
 
     public void delete(Long id){
         repository.deleteById(id);
-    }
-
-    private String uploadImg(MultipartFile multipartFile){
-        String bucket = "ecommerce-products-imgs";
-        String filename = UUID.randomUUID() + "-" + multipartFile.getOriginalFilename();
-
-        try{
-            File file = this.convertMultipartToFile(multipartFile);
-            s3Client.putObject(bucket, filename, file);
-            file.delete();
-            return s3Client.getUrl(bucket, filename).toString();
-        } catch (Exception e){
-            System.out.println(e.getMessage());
-            throw new ValidationException("Error while uploading image");
-        }
-    }
-
-    private File convertMultipartToFile(MultipartFile multipartFile) throws IOException {
-        File convFile = new File(Objects.requireNonNull(multipartFile.getOriginalFilename()));
-        FileOutputStream fos = new FileOutputStream(convFile);
-        fos.write(multipartFile.getBytes());
-        fos.close();
-        return convFile;
     }
 }
