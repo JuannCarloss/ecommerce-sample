@@ -6,6 +6,7 @@ import com.shop.ecommerce.enterprise.NotFoundException;
 import com.shop.ecommerce.enterprise.ValidationException;
 import com.shop.ecommerce.models.Product;
 import com.shop.ecommerce.repositories.ProductRepository;
+import com.shop.ecommerce.strategy.NewProductValidationStrategy;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,16 +31,13 @@ public class ProductService {
     @Autowired
     private ProductRepository repository;
 
+    @Autowired
+    private List<NewProductValidationStrategy> productValidationStrategies;
+
     public Product post(ProductRequestDTO entity){
-        String url = null;
 
-        if (entity.img() != null){
-            url = uploadImg(entity.img());
-        }
-
-        if (entity.stock() <= 0 ){
-            throw new ValidationException("Products quantity must be greater than zero");
-        }
+        productValidationStrategies.forEach(validations -> validations.validate(entity));
+        String url = uploadImg(entity.img());
 
         var product = Product.builder()
                 .name(entity.name())
