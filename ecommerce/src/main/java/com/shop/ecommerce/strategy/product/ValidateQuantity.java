@@ -6,7 +6,7 @@ import com.shop.ecommerce.strategy.NewProductValidationStrategy;
 import org.springframework.stereotype.Component;
 
 @Component
-public class validateQuantity implements NewProductValidationStrategy {
+public class ValidateQuantity implements NewProductValidationStrategy {
     @Override
     public void validate(ProductRequestDTO data) {
         if(data.stock() <= 0){

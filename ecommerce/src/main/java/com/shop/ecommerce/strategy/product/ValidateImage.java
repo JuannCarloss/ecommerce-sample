@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 @Component
-public class validateImage implements NewProductValidationStrategy {
+public class ValidateImage implements NewProductValidationStrategy {
 
     @Autowired
     private ProductRepository repository;
