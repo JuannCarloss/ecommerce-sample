@@ -9,7 +9,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.hibernate.query.SortDirection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -86,6 +90,22 @@ public class ProductController extends AbstractController{
     @GetMapping("lowest")
     public ResponseEntity lowestPrices(){
         List<Product> list = service.findAllProductsByLowestPrice();
+
+        return ResponseEntity.ok(list);
+    }
+
+    @Tag(name = "PRODUCT")
+    @Operation(summary = "List all products")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "products with lowest price",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Product.class)) })})
+    @GetMapping
+    public ResponseEntity findAll(@RequestParam(required = false)String filter,
+                                  @RequestParam(defaultValue = "0") int page,
+                                  @RequestParam(defaultValue = "10") int size){
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> list = service.findAll(filter, pageable);
 
         return ResponseEntity.ok(list);
     }

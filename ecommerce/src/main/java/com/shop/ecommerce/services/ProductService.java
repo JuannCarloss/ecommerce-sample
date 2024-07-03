@@ -9,6 +9,8 @@ import com.shop.ecommerce.repositories.ProductRepository;
 import com.shop.ecommerce.strategy.NewProductValidationStrategy;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -74,6 +76,16 @@ public class ProductService {
 
     public List<Product> findAllProductsByLowestPrice(){
         var list = repository.findProductsWithLowestPrice();
+
+        if (list.isEmpty()){
+            throw new NotFoundException("We couldn't find any products");
+        }
+
+        return list;
+    }
+
+    public Page<Product> findAll(String filter, Pageable pageable){
+        var list = repository.findAll(filter, Product.class, pageable);
 
         if (list.isEmpty()){
             throw new NotFoundException("We couldn't find any products");
