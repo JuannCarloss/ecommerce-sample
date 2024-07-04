@@ -12,11 +12,10 @@ import lombok.ToString;
 import java.time.LocalDateTime;
 
 @Entity(name = "emails")
-@Data
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class Email {
+public class Email extends EntityID{
 
     @Column(name = "user_id")
     private Long userId;
