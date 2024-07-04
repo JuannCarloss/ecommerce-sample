@@ -29,26 +29,25 @@ public class OrderItemService {
         orderItemRepository.saveAll(orderItemList);
     }
 
-    public boolean validateStock(OrderItem orderItem) {
-        Optional<Product> byId = productRepository.findById(orderItem.getProduct().getId());
-        if (orderItem.getProductQuantity() > byId.get().getStock()) {
-            throw new ValidationException("We do not have stock for " + byId.get().getName() + " at the moment :(");
+    public void validateStock(OrderItem orderItem) {
+        var productById = getOptionalProduct(orderItem.getProduct().getId());
+        if (orderItem.getProductQuantity() > productById.get().getStock()) {
+            throw new ValidationException("We do not have stock for " + productById.get().getName() + " at the moment :(");
         }
-        byId.get().setStock(byId.get().getStock() - orderItem.getProductQuantity());
-        return true;
+        productById.get().setStock(productById.get().getStock() - orderItem.getProductQuantity());
     }
-
     public void totalValue(OrderItem orderItems, Order order) {
-            Optional<Product> byId = productRepository.findById(orderItems.getProduct().getId());
-            byId.ifPresent(product -> order.setTotalPrice(order.getTotalPrice() + (product.getPrice() * orderItems.getProductQuantity())));
+        var productById = getOptionalProduct(orderItems.getProduct().getId());
+        productById.ifPresent(product -> order.setTotalPrice(order.getTotalPrice() + (product.getPrice() * orderItems.getProductQuantity())));
     }
 
-    public boolean validateProductQuantity(OrderItem orderItem){
+    public void validateProductQuantity(OrderItem orderItem){
         if (orderItem.getProductQuantity() <= 0){
-            Optional<Product> byId = productRepository.findById(orderItem.getProduct().getId());
-            throw new ValidationException("You need to have at least one of " + byId.get().getName() + " in your shop cart");
+            var productById = getOptionalProduct(orderItem.getProduct().getId());
+            throw new ValidationException("You need to have at least one of " + productById.get().getName() + " in your shop cart");
         }
-
-        return true;
+    }
+    private Optional<Product> getOptionalProduct(Long id) {
+        return productRepository.findById(id);
     }
 }
