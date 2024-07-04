@@ -3,7 +3,9 @@ package com.shop.ecommerce.strategy.order;
 import com.shop.ecommerce.enterprise.ValidationException;
 import com.shop.ecommerce.models.Order;
 import com.shop.ecommerce.strategy.NewOrderValidationStrategy;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ValidateItemsQuantity implements NewOrderValidationStrategy {
     @Override
     public void validate(Order order) {
