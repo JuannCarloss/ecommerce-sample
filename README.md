@@ -15,6 +15,7 @@
  
 - Java 17
 - AWS CLI
+- Docker and WSL
 - Any IDE
 
 <h4>Cloning</h4>
@@ -23,9 +24,9 @@
   git clone https://github.com/JuannCarloss/ecommerce-sample.git
 ```
 
-<p>With Project Open</p>
+<p>Open the Project Folder in your IDE</p>
 
-To generate QClasses from QueryDSL
+Generate QClasses from QueryDSL
 
 run
 
@@ -37,6 +38,14 @@ and
 ```bash
   mvn clean compile 
 ```
+<br/>
+
+go to `docker` folder and run
+
+```bash
+  docker-compose -f redis-compose.yml up
+```
+
 
 Enter in your IDE and Start `EcommerceApplication` class
 
