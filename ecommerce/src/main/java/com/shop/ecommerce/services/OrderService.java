@@ -1,11 +1,9 @@
 package com.shop.ecommerce.services;
 
-import com.shop.ecommerce.enterprise.NotFoundException;
-import com.shop.ecommerce.enterprise.ValidationException;
 import com.shop.ecommerce.models.Order;
 import com.shop.ecommerce.repositories.OrderRepository;
 import com.shop.ecommerce.strategy.NewOrderValidationStrategy;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,16 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
+@RequiredArgsConstructor
 public class OrderService {
 
-    @Autowired
-    private OrderRepository orderRepository;
-
-    @Autowired
-    private OrderItemService orderItemService;
-
-    @Autowired
-    private NewOrderValidationStrategy orderValidationStrategy;
+    private final OrderRepository orderRepository;
+    private final OrderItemService orderItemService;
+    private final NewOrderValidationStrategy orderValidationStrategy;
 
     @Transactional
     public Order post(Order entity){

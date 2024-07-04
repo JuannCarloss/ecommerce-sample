@@ -5,6 +5,7 @@ import com.shop.ecommerce.enterprise.ValidationException;
 import com.shop.ecommerce.models.Customer;
 import com.shop.ecommerce.repositories.CustomerRepository;
 import com.shop.ecommerce.strategy.NewCustomerValidationStrategy;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,15 +14,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CustomerService {
 
-    @Autowired
-    private ModelMapper modelMapper;
-    @Autowired
-    private CustomerRepository customerRepository;
-
-    @Autowired
-    private NewCustomerValidationStrategy customerValidationStrategy;
+    private final ModelMapper modelMapper;
+    private final CustomerRepository customerRepository;
+    private final NewCustomerValidationStrategy customerValidationStrategy;
 
     public Customer post(Customer entity){
         customerValidationStrategy.validate(entity);
