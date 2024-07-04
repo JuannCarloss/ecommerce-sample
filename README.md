@@ -14,12 +14,28 @@
  prerequisites
  
 - Java 17
+- AWS CLI
 - Any IDE
 
 <h4>Cloning</h4>
 
 ```bash
   git clone https://github.com/JuannCarloss/ecommerce-sample.git
+```
+
+<p>With Project Open</p>
+
+To generate QClasses from QueryDSL
+
+run
+
+```bash
+  mvn clean install  
+```
+and
+
+```bash
+  mvn clean compile 
 ```
 
 Enter in your IDE and Start `EcommerceApplication` class
