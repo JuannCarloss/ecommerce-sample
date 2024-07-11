@@ -1,13 +1,12 @@
 package com.shop.ecommerce.services;
 
 import com.shop.ecommerce.enterprise.NotFoundException;
-import com.shop.ecommerce.enterprise.ValidationException;
 import com.shop.ecommerce.models.Customer;
+import com.shop.ecommerce.repositories.AddressRepository;
 import com.shop.ecommerce.repositories.CustomerRepository;
 import com.shop.ecommerce.strategy.NewCustomerValidationStrategy;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,10 +18,12 @@ public class CustomerService {
 
     private final ModelMapper modelMapper;
     private final CustomerRepository customerRepository;
+    private final AddressRepository addressRepository;
     private final NewCustomerValidationStrategy customerValidationStrategy;
 
     public Customer post(Customer entity){
         customerValidationStrategy.validate(entity);
+        addressRepository.save(entity.getAddress());
         return customerRepository.save(entity);
     }
 
