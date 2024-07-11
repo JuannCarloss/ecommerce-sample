@@ -1,7 +1,6 @@
 package com.shop.ecommerce.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity(name = "customer")
@@ -22,6 +21,7 @@ public class Customer extends EntityID{
     @Column(name = "email")
     private String email;
 
-    @Column(name = "address")
-    private String address;
+    @OneToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "address_id")
+    private Address address;
 }
