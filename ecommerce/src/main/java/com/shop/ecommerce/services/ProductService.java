@@ -1,7 +1,8 @@
 package com.shop.ecommerce.services;
 
+import com.amazonaws.services.kms.model.NotFoundException;
 import com.shop.ecommerce.dtos.ProductRequestDTO;
-import com.shop.ecommerce.enterprise.NotFoundException;
+import com.shop.ecommerce.enterprise.OkNoContentException;
 import com.shop.ecommerce.models.Product;
 import com.shop.ecommerce.repositories.ProductRepository;
 import com.shop.ecommerce.strategy.NewProductValidationStrategy;
@@ -13,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -43,22 +43,23 @@ public class ProductService {
     }
 
     public Product updateProduct(Long id, Product updatedProduct){
-        Optional<Product> byId = repository.findById(id);
+        Product byId = getOptionalProduct(id);
+            modelMapper.map(updatedProduct, byId);
+            return repository.save(byId);
 
-        if (byId.isPresent()){
-            var product = byId.get();
-            modelMapper.map(updatedProduct, product);
-            return repository.save(product);
-        }
 
         throw new NotFoundException("Product not found");
+    }
+
+    public Product getById(Long id){
+        return getOptionalProduct(id);
     }
 
     public List<Product> findAllProductsByHighestPrice(){
         var list = repository.findProductsWithHighestPrice();
 
         if (list.isEmpty()){
-            throw new NotFoundException("We couldn't find any products");
+            throw new OkNoContentException("We couldn't find any products");
         }
 
         return list;
@@ -68,7 +69,7 @@ public class ProductService {
         var list = repository.findProductsWithLowestPrice();
 
         if (list.isEmpty()){
-            throw new NotFoundException("We couldn't find any products");
+            throw new OkNoContentException("We couldn't find any products");
         }
 
         return list;
@@ -78,7 +79,7 @@ public class ProductService {
         var list = repository.findAll(filter, Product.class, pageable);
 
         if (list.isEmpty()){
-            throw new NotFoundException("We couldn't find any products");
+            throw new OkNoContentException("We couldn't find any products");
         }
 
         return list;
@@ -88,7 +89,7 @@ public class ProductService {
         repository.deleteById(id);
     }
 
-    public Optional<Product> getOptionalProduct(Long id) {
-        return repository.findById(id);
+    public Product getOptionalProduct(Long id) {
+        return repository.findById(id).orElseThrow(() -> new NotFoundException("Product not found"));
     }
 }
