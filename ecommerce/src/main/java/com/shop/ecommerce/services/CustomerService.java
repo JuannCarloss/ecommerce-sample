@@ -1,6 +1,7 @@
 package com.shop.ecommerce.services;
 
-import com.shop.ecommerce.enterprise.NotFoundException;
+import com.amazonaws.services.kms.model.NotFoundException;
+import com.shop.ecommerce.enterprise.OkNoContentException;
 import com.shop.ecommerce.models.Customer;
 import com.shop.ecommerce.repositories.AddressRepository;
 import com.shop.ecommerce.repositories.CustomerRepository;
@@ -42,20 +43,14 @@ public class CustomerService {
         var list = customerRepository.findAll();
 
         if (list.isEmpty()){
-            throw new NotFoundException("We couldn't found any customer");
+            throw new OkNoContentException("We couldn't found any customer");
         }
 
         return list;
     }
 
-    public Optional<Customer> findById(Long id){
-        var byid = customerRepository.findById(id);
-
-        if (byid.isEmpty()){
-            throw new NotFoundException("Customer not found");
-        }
-
-        return byid;
+    public Customer findById(Long id){
+        return customerRepository.findById(id).orElseThrow(() -> new NotFoundException("Customer not found"));
     }
 
     public void delete(Long id){
