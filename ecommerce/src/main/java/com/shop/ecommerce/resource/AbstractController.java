@@ -1,6 +1,6 @@
 package com.shop.ecommerce.resource;
 
-import com.shop.ecommerce.enterprise.OkNoContent;
+import com.shop.ecommerce.enterprise.OkNoContentException;
 import com.shop.ecommerce.enterprise.TooManyRequestException;
 import com.shop.ecommerce.enterprise.ValidationException;
 import org.springframework.http.HttpStatus;
@@ -40,9 +40,9 @@ public abstract class AbstractController {
         return errors;
     }
     @ResponseStatus(HttpStatus.OK)
-    @ExceptionHandler(OkNoContent.class)
+    @ExceptionHandler(OkNoContentException.class)
     public Map<String, String> handleValidationExceptions404(
-            OkNoContent ex) {
+            OkNoContentException ex) {
         Map<String, String> errors = new HashMap<>();
         errors.put("erro", ex.getMessage());
         return errors;
