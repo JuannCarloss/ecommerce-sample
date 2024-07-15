@@ -4,6 +4,8 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.PathBuilder;
+import com.shop.ecommerce.enterprise.ValidationException;
+
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 
@@ -46,12 +48,12 @@ public class BooleanBuilderUtil {
                         predicate.and(Expressions.booleanTemplate("{0} like '%'||{1}||'%'", fieldPath, Expressions.constant(parts[2])));
                         break;
                     default:
-                        throw new RuntimeException("Operador não suportado");
+                        throw new ValidationException("Operator not found");
                 }
             } catch (NoSuchFieldException e) {
-                throw new RuntimeException("Campo não encontrado");
+                throw new ValidationException("Field not Found");
             } catch (Exception e) {
-                throw new RuntimeException("Acesso ilegal ao campo");
+                throw new ValidationException("Illegal access in Field");
             }
         }
 
@@ -67,12 +69,12 @@ public class BooleanBuilderUtil {
                         predicate.and(Expressions.booleanTemplate("{0} >= {1} AND {0} <= {2}", fieldPath, getType(fieldType, parts[2]), getType(fieldType, parts[3])));
                         break;
                     default:
-                        throw new RuntimeException("Operador não suportado");
+                        throw new ValidationException("Operator not supported");
                 }
             } catch (NoSuchFieldException e) {
-                throw new RuntimeException("Campo não encontrado");
+                throw new ValidationException("Field not Found");
             } catch (Exception e) {
-                throw new RuntimeException("Acesso ilegal ao campo");
+                throw new ValidationException("Illegal access in Field");
             }
         }
 
