@@ -46,9 +46,6 @@ public class ProductService {
         Product byId = getOptionalProduct(id);
             modelMapper.map(updatedProduct, byId);
             return repository.save(byId);
-
-
-        throw new NotFoundException("Product not found");
     }
 
     public Product getById(Long id){
