@@ -3,6 +3,7 @@ package com.shop.ecommerce.services;
 import com.shop.ecommerce.enterprise.ValidationException;
 import com.shop.ecommerce.models.Order;
 import com.shop.ecommerce.models.OrderItem;
+import com.shop.ecommerce.models.Product;
 import com.shop.ecommerce.repositories.OrderItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,21 +27,21 @@ public class OrderItemService {
     }
 
     public void validateStock(OrderItem orderItem) {
-        var productById = productService.getOptionalProduct(orderItem.getProduct().getId());
-        if (orderItem.getProductQuantity() > productById.get().getStock()) {
-            throw new ValidationException("We do not have stock for " + productById.get().getName() + " at the moment :(");
+        Product productById = productService.getOptionalProduct(orderItem.getProduct().getId());
+        if (orderItem.getProductQuantity() > productById.getStock()) {
+            throw new ValidationException("We do not have stock for " + productById.getName() + " at the moment :(");
         }
-        productById.get().setStock(productById.get().getStock() - orderItem.getProductQuantity());
+        productById.setStock(productById.getStock() - orderItem.getProductQuantity());
     }
     public void totalValue(OrderItem orderItems, Order order) {
         var productById = productService.getOptionalProduct(orderItems.getProduct().getId());
-        productById.ifPresent(product -> order.setTotalPrice(order.getTotalPrice() + (product.getPrice() * orderItems.getProductQuantity())));
+        order.setTotalPrice(order.getTotalPrice() + (productById.getPrice() * orderItems.getProductQuantity()));
     }
 
     public void validateProductQuantity(OrderItem orderItem){
         if (orderItem.getProductQuantity() <= 0){
             var productById = productService.getOptionalProduct(orderItem.getProduct().getId());
-            throw new ValidationException("You need to have at least one of " + productById.get().getName() + " in your shop cart");
+            throw new ValidationException("You need to have at least one of " + productById.getName() + " in your shop cart");
         }
     }
 }
