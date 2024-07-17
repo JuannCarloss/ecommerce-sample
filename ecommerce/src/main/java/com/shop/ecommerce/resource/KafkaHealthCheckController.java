@@ -12,7 +12,7 @@ public class KafkaHealthCheckController {
 
     private static final String TOPIC = "order-payment";
     @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
+    private KafkaTemplate<String, Object> kafkaTemplate;
 
 
     @PostMapping
