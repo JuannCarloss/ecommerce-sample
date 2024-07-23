@@ -32,7 +32,7 @@ public class CustomerController extends AbstractController{
             @ApiResponse(responseCode = "422", description = "the body that you sent is not valid",
                     content = @Content) })
     @PostMapping
-    public ResponseEntity save(@RequestBody Customer entity) throws IOException {
+    public ResponseEntity save(@RequestBody Customer entity){
         var save = service.post(entity);
         return ResponseEntity.status(HttpStatus.CREATED).body(save);
     }

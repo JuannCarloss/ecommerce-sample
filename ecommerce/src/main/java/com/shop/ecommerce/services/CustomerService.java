@@ -27,7 +27,7 @@ public class CustomerService {
     private final SendEmail sendEmail;
 
     @Transactional
-    public Customer post(Customer entity) throws IOException {
+    public Customer post(Customer entity){
         customerValidationStrategy.validate(entity);
         sendEmail.send(new EmailRequestDTO(entity.getEmail(), "REGISTER"));
         addressService.save(entity.getAddress(), entity);
