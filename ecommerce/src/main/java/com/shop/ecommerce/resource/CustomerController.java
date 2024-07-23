@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -31,7 +32,7 @@ public class CustomerController extends AbstractController{
             @ApiResponse(responseCode = "422", description = "the body that you sent is not valid",
                     content = @Content) })
     @PostMapping
-    public ResponseEntity save(@RequestBody Customer entity){
+    public ResponseEntity save(@RequestBody Customer entity) throws IOException {
         var save = service.post(entity);
         return ResponseEntity.status(HttpStatus.CREATED).body(save);
     }
