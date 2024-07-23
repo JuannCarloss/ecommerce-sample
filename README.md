@@ -43,7 +43,7 @@ and
 go to `docker` folder and run
 
 ```bash
-  docker-compose -f redis-compose.yml up
+  docker-compose up -d
 ```
 
 
@@ -64,3 +64,4 @@ to have knowledge of all endpoints go to:
 ![DOCKER](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
 ![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
 ![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=white)
+![Apache Kafka](https://img.shields.io/badge/Apache%20Kafka-000?style=for-the-badge&logo=apachekafka)
