@@ -1,6 +1,8 @@
 package com.shop.ecommerce.services;
 
 import com.amazonaws.services.kms.model.NotFoundException;
+import com.shop.ecommerce.client.SendEmail;
+import com.shop.ecommerce.dtos.EmailRequestDTO;
 import com.shop.ecommerce.enterprise.OkNoContentException;
 import com.shop.ecommerce.models.Customer;
 import com.shop.ecommerce.repositories.CustomerRepository;
@@ -10,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,10 +24,12 @@ public class CustomerService {
     private final CustomerRepository customerRepository;
     private final AddressService addressService;
     private final NewCustomerValidationStrategy customerValidationStrategy;
+    private final SendEmail sendEmail;
 
     @Transactional
-    public Customer post(Customer entity){
+    public Customer post(Customer entity) throws IOException {
         customerValidationStrategy.validate(entity);
+        sendEmail.send(new EmailRequestDTO(entity.getEmail(), "REGISTER"));
         addressService.save(entity.getAddress(), entity);
         return customerRepository.save(entity);
     }
