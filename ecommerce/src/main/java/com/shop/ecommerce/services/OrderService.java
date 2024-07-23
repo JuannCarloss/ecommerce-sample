@@ -1,5 +1,7 @@
 package com.shop.ecommerce.services;
 
+import com.shop.ecommerce.client.SendEmail;
+import com.shop.ecommerce.dtos.EmailRequestDTO;
 import com.shop.ecommerce.dtos.OrderToPaymentDTO;
 import com.shop.ecommerce.models.Customer;
 import com.shop.ecommerce.models.Order;
@@ -11,6 +13,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.Optional;
 
 
@@ -18,12 +21,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OrderService {
 
+    private static final String TOPIC = "order-payment";
     private final OrderRepository orderRepository;
     private final OrderItemService orderItemService;
     private final NewOrderValidationStrategy orderValidationStrategy;
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final CustomerRepository customerRepository;
-    private static final String TOPIC = "order-payment";
+    private final SendEmail sendEmail;
 
     @Transactional
     public Order post(Order entity){
@@ -35,7 +39,9 @@ public class OrderService {
 
         Optional<Customer> byID = customerRepository.findById(order.getCustomer().getId());
 
-        var payment = new OrderToPaymentDTO(order.getId(), byID.get().getEmail(), order.getTotalPrice());
+        sendEmail.send(new EmailRequestDTO(byID.get().getEmail(), "ORDER"));
+
+        var payment = new OrderToPaymentDTO(byID.get().getEmail(), order.getTotalPrice());
 
         kafkaTemplate.send(TOPIC, payment);
 
