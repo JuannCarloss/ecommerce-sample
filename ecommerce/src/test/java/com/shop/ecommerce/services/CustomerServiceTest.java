@@ -3,13 +3,14 @@ package com.shop.ecommerce.services;
 import com.shop.ecommerce.enterprise.ValidationException;
 import com.shop.ecommerce.models.Customer;
 import com.shop.ecommerce.repositories.CustomerRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -26,7 +27,7 @@ class CustomerServiceTest {
 
     @Test
     @DisplayName("Should save a new customer in database")
-    public void saveNewCustomer(){
+    public void saveNewCustomer() throws IOException {
         customerService.post(newCustomer());
     }
 
