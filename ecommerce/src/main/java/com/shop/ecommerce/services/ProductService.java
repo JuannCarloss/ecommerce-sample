@@ -1,6 +1,5 @@
 package com.shop.ecommerce.services;
 
-import com.amazonaws.services.kms.model.NotFoundException;
 import com.shop.ecommerce.dtos.ProductRequestDTO;
 import com.shop.ecommerce.enterprise.OkNoContentException;
 import com.shop.ecommerce.models.Product;
@@ -87,6 +86,6 @@ public class ProductService {
     }
 
     public Product getOptionalProduct(Long id) {
-        return repository.findById(id).orElseThrow(() -> new NotFoundException("Product not found"));
+        return repository.findById(id).orElseThrow(() -> new OkNoContentException("Product not found"));
     }
 }
