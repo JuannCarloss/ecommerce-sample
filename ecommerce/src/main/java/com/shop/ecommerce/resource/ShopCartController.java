@@ -1,7 +1,7 @@
 package com.shop.ecommerce.resource;
 
-import com.shop.ecommerce.models.Order;
-import com.shop.ecommerce.services.OrderService;
+import com.shop.ecommerce.models.ShopCart;
+import com.shop.ecommerce.services.ShopCartService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -13,27 +13,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-
 
 @RestController
-@RequestMapping("/api/order")
-public class OrderController extends AbstractController{
+@RequestMapping("/api/shopcart")
+public class ShopCartController extends AbstractController{
 
     @Autowired
-    private OrderService service;
+    private ShopCartService service;
 
-    @Tag(name = "ORDER")
+    @Tag(name = "shopcart")
     @Operation(summary = "Post a new Order with its products")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created a new order",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Order.class)) }),
+                            schema = @Schema(implementation = ShopCart.class)) }),
             @ApiResponse(responseCode = "422", description = "the body that you sent is not valid",
                     content = @Content) })
-    @PostMapping
-    public ResponseEntity save(@RequestBody Order entity){
-        var save = service.post(entity);
+    @PostMapping("/{id}")
+    public ResponseEntity buy(@PathVariable("id") Long id){
+        var save = service.buyShopcart(id);
         return ResponseEntity.status(HttpStatus.CREATED).body(save);
     }
 }
