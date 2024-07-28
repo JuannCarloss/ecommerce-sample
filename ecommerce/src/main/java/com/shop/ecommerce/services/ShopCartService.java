@@ -15,6 +15,8 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 
 
 @Service
@@ -49,8 +51,10 @@ public class ShopCartService {
 
         sendEmail.send(new EmailRequestDTO(customerByID.getEmail(), "ORDER"));
 
-        var payment = new PaymentDTO(customerByID.getEmail(), shopcart.getTotalPrice());
-        var order = new OrderDTO(customerByID.getEmail(), OrderStatus.AWAITING_PAYMENT, shopcart.getTotalPrice());
+        String date = Timestamp.from(Instant.now()).toString();
+
+        var payment = new PaymentDTO(customerByID.getEmail(), date,shopcart.getTotalPrice());
+        var order = new OrderDTO(customerByID.getEmail(), date,OrderStatus.AWAITING_PAYMENT, shopcart.getTotalPrice());
 
         shopcart.setTotalPrice(0.0);
         kafkaTemplate.send(TOPIC_PAYMENT, payment);
